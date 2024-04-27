@@ -1,11 +1,20 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { Step } from './value-object/step.vo';
 import { Capacity } from './value-object/capacity.vo';
+import {
+  ICacheProvider,
+  ICacheProviderToken,
+} from './provider/provider.interface';
 
 export type StateKey = string;
 
 @Injectable()
 export class StepsCalculator {
+  constructor(
+    @Inject(ICacheProviderToken)
+    private cache: ICacheProvider,
+  ) {}
+
   static ACTIONS = {
     FILL_X: 'Fill bucket X',
     FILL_Y: 'Fill bucket Y',
@@ -16,10 +25,15 @@ export class StepsCalculator {
   };
 
   // Calculate the steps to reach the target volume
-  calculate(x: Capacity, y: Capacity, target: Capacity): Step[] {
+  async calculate(x: Capacity, y: Capacity, target: Capacity): Promise<Step[]> {
+    const cacheKey = this.generateCacheKey(x, y, target);
+    if (await this.cache.has(cacheKey)) {
+      return this.cache.get(cacheKey) || [];
+    }
+
     const visited = new Set<StateKey>();
-    const queue: Step[] = [];
-    const steps: Step[] = [];
+    let queue: Step[] = [];
+    let steps: Step[] = [];
 
     // Add the initial state to the queue
     queue.push(new Step(Capacity.fromNumber(0), Capacity.fromNumber(0)));
@@ -34,7 +48,8 @@ export class StepsCalculator {
       if (currentState.isTargetHit(target)) {
         // Rewind to get the list of actions taken to reach the target
         const path = this.rewind(currentState);
-        steps.push(...path);
+        //steps.push(...path);
+        steps = steps.concat(path);
         break;
       }
 
@@ -47,8 +62,11 @@ export class StepsCalculator {
       const possibleMoves = this.generatePossibleMoves(currentState, x, y);
 
       // Add the possible moves to the queue
-      queue.push(...possibleMoves);
+      queue = queue.concat(possibleMoves);
     }
+
+    // Cache the result
+    await this.cache.set(cacheKey, steps);
 
     return steps;
   }
@@ -56,6 +74,11 @@ export class StepsCalculator {
   // Generate a unique key for the state
   private generateStateKey(currentState: Step): StateKey {
     return `${currentState.x.value},${currentState.y.value}`;
+  }
+
+  // Generate a unique key for the cache
+  private generateCacheKey(x: Capacity, y: Capacity, target: Capacity): string {
+    return `${x.value}-${y.value}-${target.value}`;
   }
 
   // Generate all possible moves from the current state
