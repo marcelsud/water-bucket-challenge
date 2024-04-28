@@ -26,9 +26,7 @@ docker-compose up
 
 ### <a name="locally"></a>Option 2: Running the service locally (Node.js LTS required)
 
-```
-💡 If the environment variables `REDIS_HOST` and `REDIS_PORT` are not set, the service will run without Redis cache.
-```
+> 💡 If the environment variables `REDIS_HOST` and `REDIS_PORT` are not set, the service will run without Redis cache.
 
 To run the service locally, you need to install the dependencies using the following command:
 
