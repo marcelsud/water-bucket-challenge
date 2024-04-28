@@ -1,9 +1,8 @@
-import { Capacity } from './value-object/capacity.vo';
-import { StepsCalculator } from './service';
-import { InMemoryCacheProvider } from './provider/in-memory-cache.provider';
+import { Capacity } from '../value-object/capacity.vo';
+import { StepsCalculator } from './steps-calculator.service';
 
 describe('steps calculator', () => {
-  let calculator = new StepsCalculator(new InMemoryCacheProvider());
+  let calculator = new StepsCalculator();
 
   it('should find the correct steps to reach target 4 with capacity 2 and 10', async () => {
     const steps = await calculator.calculate(

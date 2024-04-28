@@ -21,8 +21,8 @@ export class CalculateStepsResponseDto {
     return new CalculateStepsResponseDto(
       steps.map((step, index) => ({
         step: index + 1,
-        bucketX: step.x.value,
-        bucketY: step.y.value,
+        bucketX: step.x,
+        bucketY: step.y,
         action: step.action,
         status: index === steps.length - 1 ? SOLVED_MESSAGE : undefined,
       })),

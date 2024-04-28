@@ -1,6 +1,5 @@
-import { StepsCalculator } from '../service';
-import { Capacity } from '../value-object/capacity.vo';
 import { Step } from '../value-object/step.vo';
+import { StepsCalculator } from '../service/steps-calculator.service';
 import { CalculateStepsResponseDto } from './calculate-steps-response.dto';
 
 describe('calculate steps response dto', () => {
@@ -11,30 +10,10 @@ describe('calculate steps response dto', () => {
 
   it('should create a dto with a solution', () => {
     const dto = CalculateStepsResponseDto.fromSteps([
-      new Step(
-        Capacity.fromNumber(2),
-        Capacity.fromNumber(0),
-        null,
-        StepsCalculator.ACTIONS.FILL_X,
-      ),
-      new Step(
-        Capacity.fromNumber(0),
-        Capacity.fromNumber(2),
-        null,
-        StepsCalculator.ACTIONS.TRANSFER_XY,
-      ),
-      new Step(
-        Capacity.fromNumber(2),
-        Capacity.fromNumber(2),
-        null,
-        StepsCalculator.ACTIONS.FILL_X,
-      ),
-      new Step(
-        Capacity.fromNumber(0),
-        Capacity.fromNumber(4),
-        null,
-        StepsCalculator.ACTIONS.TRANSFER_XY,
-      ),
+      new Step(2, 0, StepsCalculator.ACTIONS.FILL_X),
+      new Step(0, 2, StepsCalculator.ACTIONS.TRANSFER_XY),
+      new Step(2, 2, StepsCalculator.ACTIONS.FILL_X),
+      new Step(0, 4, StepsCalculator.ACTIONS.TRANSFER_XY),
     ]);
     expect(dto.solution).toEqual([
       {

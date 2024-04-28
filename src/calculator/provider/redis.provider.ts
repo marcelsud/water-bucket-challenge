@@ -1,4 +1,4 @@
-import { ICacheProvider } from './provider.interface';
+import { ICacheProvider } from './cache.provider';
 import { Injectable } from '@nestjs/common';
 import { RedisJSON } from '@redis/json/dist/commands';
 import {
