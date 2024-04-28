@@ -91,8 +91,9 @@ npm run test
 
 ### Request Example
 
-```json
 POST /api/v1/calculate-steps
+
+```json
 {
   "x_capacity": 2,
   "y_capacity": 10,
