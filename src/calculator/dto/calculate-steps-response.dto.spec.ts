@@ -6,7 +6,7 @@ import { CalculateStepsResponseDto } from './calculate-steps-response.dto';
 describe('calculate steps response dto', () => {
   it('should create a dto with no solution', () => {
     const dto = CalculateStepsResponseDto.fromSteps([]);
-    expect(dto.solution).toBe('No Solution');
+    expect(dto.solution.length).toBe(0);
   });
 
   it('should create a dto with a solution', () => {

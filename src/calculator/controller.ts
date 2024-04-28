@@ -27,8 +27,15 @@ export class StepsController {
         Capacity.fromNumber(dto.z_amount_wanted),
       );
 
+      if (steps.length === 0) {
+        throw new HttpException('No Solution', HttpStatus.UNPROCESSABLE_ENTITY);
+      }
+
       return CalculateStepsResponseDto.fromSteps(steps);
     } catch (error) {
+      if (error instanceof HttpException) {
+        throw error;
+      }
       Logger.error(error);
       throw new HttpException(
         'Internal server error',
